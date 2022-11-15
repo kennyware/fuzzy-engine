@@ -1,0 +1,259 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: hsl(228, 33%, 97%);
+  font-family: "Rubik", sans-serif;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.container {
+  max-width: 600px;
+  margin: 100px auto;
+}
+
+.comment-box {
+  margin-bottom: 25px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  display: flex;
+}
+
+.comment-score {
+  padding: 5px 10px;
+  background: hsl(228, 33%, 97%);
+  display: grid;
+  grid-column: auto;
+  justify-content: space-evenly;
+  border-radius: 10px;
+  height: 80px;
+}
+
+.comment-score button {
+  background: none;
+  border: none;
+  outline: none;
+  color: hsl(211, 10%, 45%);
+  cursor: pointer;
+  fill: #c5c6ef;
+  transition: fill 0.05s ease-in;
+}
+
+.comment-score button:hover {
+  fill: hsl(212, 24%, 26%);
+}
+
+.comment-score .score-count {
+  color: hsl(238, 40%, 52%);
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+}
+
+.comment-body {
+  margin-left: 20px;
+  width: 100%;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.comment-header .comment-info {
+  display: flex;
+  align-items: center;
+}
+
+.comment-header .comment-info * {
+  margin-right: 10px;
+}
+
+.comment-header .comment-info .avatar {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+
+.comment-header .comment-info .username {
+  font-weight: 500;
+}
+
+.comment-header .comment-info .current-user {
+  padding: 2.5px 5px;
+  background: hsl(238, 40%, 52%);
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.8em;
+}
+
+.comment-header .comment-info .createdAt {
+  color: hsl(211, 10%, 45%);
+}
+
+.comment-header .button-group {
+  margin-left: auto;
+  display: flex;
+}
+
+.comment-header button {
+  font-weight: 700;
+  border: none;
+  outline: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: opacity 0.1s ease-in;
+}
+
+.comment-header .reply-btn,
+.comment-header .edit-btn {
+  color: hsl(238, 40%, 52%);
+}
+
+.comment-header .reply-btn:hover,
+.comment-header .delete-btn:hover,
+.comment-header .edit-btn:hover {
+  opacity: 0.4;
+}
+
+.reply-btn img,
+.delete-btn img {
+  margin-right: 5px;
+}
+
+.comment-header .delete-btn {
+  color: hsl(358, 79%, 66%);
+  margin-right: 15px;
+}
+
+.sub-comment-container {
+  border-left: 2px solid hsl(223, 19%, 93%);
+  width: 85%;
+  margin-left: auto;
+  padding-left: 50px;
+}
+
+#add-comment-section {
+  background: #fff;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+#add-comment-form {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+#add-comment-form .avatar {
+  width: 35px;
+  height: 35px;
+}
+
+#add-comment-textarea {
+  flex: 1;
+  margin: 0 10px;
+  border-color: hsl(223, 19%, 93%);
+  height: 100px;
+  padding: 10px;
+  resize: none;
+  border-radius: 5px;
+}
+
+#add-comment-textarea:focus-visible {
+  border: 1px solid hsl(238, 40%, 52%);
+  outline: hsl(238, 40%, 52%) 1px;
+}
+
+#add-comment-btn {
+  color: #fff;
+  background: hsl(238, 40%, 52%);
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  padding: 10px 20px;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.05s ease-in;
+}
+
+#add-comment-btn:hover {
+  opacity: 0.4;
+}
+
+#modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#modal.hide {
+  display: none;
+}
+
+.modal-container {
+  max-width: 300px;
+  max-height: 150px;
+  background: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 0.8em;
+}
+
+.modal-heading {
+  color: hsl(0, 0%, 20%);
+  margin-bottom: 10px;
+}
+
+.modal-content {
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.modal-button-group {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-btn {
+  color: #fff;
+  width: 48%;
+  height: 35px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.modal-btn:hover {
+  opacity: 0.5;
+}
+
+#modal-cancel-btn {
+  background: #777;
+}
+
+#modal-delete-btn {
+  background: hsl(358, 79%, 66%);
+}

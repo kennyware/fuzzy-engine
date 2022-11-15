@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Comments Section</title>
+  </head>
+  <body>
+    <div class="container">
+      <section id="comments-section"></section>
+
+      <section id="add-comment-section">
+        <form action="#" id="add-comment-form">
+          <div class="current-user avatar">
+            <img src="./img/avatars/image-juliusomo.png" alt="" />
+          </div>
+          <textarea
+            id="add-comment-textarea"
+            placeholder="Add a comment..."
+          ></textarea>
+          <button type="submit" id="add-comment-btn">Send</button>
+        </form>
+      </section>
+    </div>
+
+    <div id="modal" class="hide">
+      <div class="modal-container">
+        <h2 class="modal-heading">Delete Comment?</h2>
+        <div class="modal-content">
+          Are you sure you want to delete this comment? This will remove the
+          comment and can't be undone.
+        </div>
+        <div class="modal-button-group">
+          <button class="modal-btn" id="modal-cancel-btn">No, Cancel</button>
+          <button class="modal-btn" id="modal-delete-btn">Yes, Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <script async>
+      let comments, currentUser;
+
+      class Comment {
+        constructor(
+          id,
+          content,
+          createdAt,
+          score,
+          png,
+          webp,
+          username,
+          replies
+        ) {
+          this.id = id;
+          this.content = content;
+          this.createdAt = createdAt;
+          this.score = score;
+          this.user = {
+            image: {
+              png,
+              webp,
+            },
+            username,
+          };
+          this.replies = replies;
+        }
+      }
+      const curDate = new Date();
+      // let newComment = new Comment(
+      //   99,
+      //   "test",
+      //   curDate,
+      //   0,
+      //   "somePNGURL",
+      //   "WebpURL",
+      //   "Kenny",
+      //   []
+      // );
+
+      // const commentObj = {
+      //   id: 32,
+      //   content: "Test content",
+      //   createdAt: curDate,
+      //   score: 0,
+      //   user: {
+      //     image: {
+      //       png: "PNG URL",
+      //       webp: "WEBP URL",
+      //     },
+      //     username: "JohnnyT",
+      //   },
+      //   replies: [],
+      // };
+
+      const commentBoxHTML = (commentData) => `<div class="comment-box">
+                    <div class="comment-score">
+                      <button class="add-score-btn">
+                        <svg width="11" height="11" xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6.33 10.896c.137 0 .255-.05.354-.149.1-.1.149-.217.149-.354V7.004h3.315c.136 0 .254-.05.354-.149.099-.1.148-.217.148-.354V5.272a.483.483 0 0 0-.148-.354.483.483 0 0 0-.354-.149H6.833V1.4a.483.483 0 0 0-.149-.354.483.483 0 0 0-.354-.149H4.915a.483.483 0 0 0-.354.149c-.1.1-.149.217-.149.354v3.37H1.08a.483.483 0 0 0-.354.15c-.1.099-.149.217-.149.353v1.23c0 .136.05.254.149.353.1.1.217.149.354.149h3.333v3.39c0 .136.05.254.15.353.098.1.216.149.353.149H6.33Z"
+                          />
+                        </svg>
+                      </button>
+                      <p class="score-count">${commentData.score}</p>
+                      <button class="subtract-score-btn">
+                        <svg width="11" height="3" xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M9.256 2.66c.204 0 .38-.056.53-.167.148-.11.222-.243.222-.396V.722c0-.152-.074-.284-.223-.395a.859.859 0 0 0-.53-.167H.76a.859.859 0 0 0-.53.167C.083.437.009.57.009.722v1.375c0 .153.074.285.223.396a.859.859 0 0 0 .53.167h8.495Z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <div class="comment-body">
+                      <div class="comment-header">
+                        <div class="comment-info">
+                          <div class="avatar">
+                            <img src=${commentData.user.image.png} alt="" />
+                          </div>
+                          <p class="username">${commentData.user.username}</p>
+                          ${
+                            currentUser.username === commentData.user.username
+                              ? "<p class='current-user'>you</p>"
+                              : ""
+                          }
+                          <p class="createdAt">${commentData.createdAt}</p>
+                        </div>
+                        <div class="button-group">
+                          ${
+                            currentUser.username === commentData.user.username
+                              ? `<button class="delete-btn" onclick="deleteComment(event)">
+                                  <img src="./img/icon-delete.svg" alt="delete button" /> Delete
+                                </button>`
+                              : ""
+                          }
+                        <button class="reply-btn">
+                          <img src="./img/icon-reply.svg" alt="reply button" /> Reply
+                        </button>
+                          </div>
+                      </div>
+                      <p class="comment-text">${commentData.content}</p>
+                    </div>
+                  </div>`;
+
+      window.onload = () => {
+        fetch("./data.json")
+          .then((res) => res.json())
+          .then((data) => {
+            currentUser = data.currentUser;
+            comments = data.comments;
+            comments.forEach((comment) => {
+              document.getElementById("comments-section").insertAdjacentHTML(
+                "beforeend",
+                `<div class="comment-group data-id=${comment.id}">
+                  ${commentBoxHTML(comment)}
+                ${
+                  comment.replies.length > 0
+                    ? `<div class="sub-comment-container">` +
+                      comment.replies
+                        .map((replies) => commentBoxHTML(replies))
+                        .join("")
+                    : ``
+                }</div>`
+              );
+            });
+            for (const x of document.getElementsByClassName("add-score-btn")) {
+              x.addEventListener("click", () => {
+                const score = x.parentElement.querySelector(".score-count");
+                score.innerHTML = parseInt(score.innerHTML, 10) + 1;
+              });
+            }
+
+            for (const x of document.getElementsByClassName(
+              "subtract-score-btn"
+            )) {
+              x.addEventListener("click", () => {
+                const score = x.parentElement.querySelector(".score-count");
+                score.innerHTML = parseInt(score.innerHTML, 10) - 1;
+              });
+            }
+          });
+      };
+
+      const addCommentForm = document
+        .getElementById("add-comment-form")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          const commentTextArea = e.target.querySelector(
+            "#add-comment-textarea"
+          );
+
+          if (commentTextArea.value) {
+            const maxId = Math.floor(Math.random() * 100) + 4;
+            let newComment = new Comment(
+              maxId,
+              commentTextArea.value,
+              "today",
+              0,
+              currentUser.image.png,
+              currentUser.image.webp,
+              currentUser.username,
+              []
+            );
+            comments.push(newComment);
+            document
+              .getElementById("comments-section")
+              .insertAdjacentHTML(
+                "beforeend",
+                `<div class="comment-group data-id=${maxId}">${commentBoxHTML(
+                  newComment
+                )}</div>`
+              );
+            commentTextArea.value = "";
+          }
+        });
+
+      const deleteComment = (e) => {
+        const commentDel = e.target.closest(".comment-box");
+        document.getElementById("modal").classList.remove("hide");
+
+        document
+          .getElementById("modal-delete-btn")
+          .addEventListener("click", () => {
+            commentDel.remove();
+            document.getElementById("modal").classList.add("hide");
+          });
+
+        document
+          .getElementById("modal-cancel-btn")
+          .addEventListener("click", () => {
+            document.getElementById("modal").classList.add("hide");
+          });
+      };
+    </script>
+  </body>
+</html>
